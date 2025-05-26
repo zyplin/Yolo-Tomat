@@ -3,9 +3,6 @@ ultralytics==8.0.191
 opencv-python-headless==4.8.0.76
 Pillow==10.3.0
 requests==2.31.0
-python-3.10.13
-
-# Versi CPU only dari PyTorch (untuk mengecilkan image)
-torch==2.1.2+cpu
-torchvision==0.16.2+cpu
---find-links https://download.pytorch.org/whl/cpu
+torch==2.1.2
+torchvision==0.16.2
+gunicorn

@@ -1,4 +1,3 @@
-from http.client import REQUEST_ENTITY_TOO_LARGE
 from flask import Flask, render_template, Response, request, redirect, url_for, send_from_directory, send_file
 import cv2
 import os
@@ -14,22 +13,29 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['CSV_EXPORT'] = 'exported.csv'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+# Download model jika belum ada
 MODEL_PATH = "my_model.pt"
-MODEL_URL = "https://drive.google.com/file/d/1BjexTUhxkNMg7-DO8I75LQjBBobH2Lv3/view?usp=drive_link"
+MODEL_ID = "1BjexTUhxkNMg7-DO8I75LQjBBobH2Lv3"
+MODEL_URL = f"https://drive.google.com/uc?export=download&id={MODEL_ID}"
 
 if not os.path.exists(MODEL_PATH):
     print("📥 Mengunduh model...")
-    r = REQUEST_ENTITY_TOO_LARGE.get(MODEL_URL)
+    r = requests.get(MODEL_URL, stream=True)
     with open(MODEL_PATH, "wb") as f:
-        f.write(r.content)
+        for chunk in r.iter_content(chunk_size=8192):
+            if chunk:
+                f.write(chunk)
 
+# Load model YOLO
 model = YOLO(MODEL_PATH)
 
+# Global state
 camera = None
 camera_active = False
 latest_uploaded_result = None
 latest_stats = {}
 
+# Deskripsi label
 label_descriptions = {
     "Mentah": "Tomat masih hijau. Belum cocok untuk dikonsumsi langsung.",
     "Setengah Matang": "Tomat mulai jingga. Cocok disimpan sebentar atau dimasak.",
@@ -87,8 +93,7 @@ def generate_frames():
 
 @app.route('/video')
 def video():
-    return Response(generate_frames(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -150,5 +155,3 @@ def info_tomat():
 @app.route('/tentang')
 def tentang():
     return render_template('tentang.html')
-
-
