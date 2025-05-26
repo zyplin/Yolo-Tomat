@@ -4,6 +4,7 @@ import cv2
 import os
 import time
 import csv
+import requests
 from collections import Counter
 from ultralytics import YOLO
 from itertools import zip_longest
@@ -150,7 +151,4 @@ def info_tomat():
 def tentang():
     return render_template('tentang.html')
 
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(debug=False, host='0.0.0.0', port=port)
 
