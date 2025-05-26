@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Tentang Aplikasi{% endblock %}
+{% block content %}
+
+<div class="container py-4">
+  <h2 class="text-center mb-4">📱 Tentang Aplikasi Deteksi Kematangan Tomat</h2>
+
+  <div class="mb-4 p-4 rounded shadow" style="background-color: #2f324a;">
+    <h4 class="text-warning">🎯 Tujuan Pengembangan</h4>
+    <p>
+      Aplikasi ini dikembangkan untuk membantu petani, pedagang, dan konsumen dalam mengidentifikasi tingkat kematangan tomat secara cepat, objektif, dan otomatis. Dengan bantuan kecerdasan buatan, pengguna dapat mengambil keputusan yang lebih tepat terkait waktu panen, distribusi, hingga konsumsi.
+    </p>
+    <p>
+      Deteksi dilakukan berdasarkan citra visual tomat menggunakan kamera atau gambar yang diunggah. Setiap hasil klasifikasi disertai dengan penjelasan deskriptif dan dapat diunduh dalam bentuk CSV.
+    </p>
+  </div>
+
+  <div class="mb-4 p-4 rounded shadow" style="background-color: #2c2f45;">
+    <h4 class="text-warning">🧠 Teknologi yang Digunakan</h4>
+    <ul>
+      <li>🔍 <strong>YOLOv8</strong> – Model deteksi objek real-time berbasis deep learning</li>
+      <li>⚙️ <strong>OpenCV</strong> – Untuk manipulasi gambar dan video</li>
+      <li>🌐 <strong>Flask</strong> – Framework Python ringan untuk backend web</li>
+      <li>💻 <strong>Bootstrap 5</strong> – Framework frontend untuk UI responsif</li>
+      <li>📄 <strong>CSV Export</strong> – Menyimpan hasil klasifikasi untuk dokumentasi</li>
+    </ul>
+  </div>
+
+  <div class="mb-4 p-4 rounded shadow" style="background-color: #2f324a;">
+    <h4 class="text-warning">🧪 Cara Kerja Aplikasi</h4>
+    <ol>
+      <li>👁️ Pengguna membuka kamera atau mengunggah gambar tomat</li>
+      <li>🧠 Model YOLOv8 mendeteksi tomat dan menandai tingkat kematangan</li>
+      <li>📊 Sistem menampilkan hasil klasifikasi lengkap beserta deskripsinya</li>
+      <li>💾 Pengguna dapat mengunduh hasil deteksi dalam format .csv</li>
+    </ol>
+  </div>
+
+  <div class="mb-4 p-4 rounded shadow" style="background-color: #2c2f45;">
+    <h4 class="text-warning">⚙️ Fitur Unggulan</h4>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card bg-dark text-white h-100">
+          <div class="card-body">
+            <h5 class="card-title">📸 Kamera Real-Time</h5>
+            <p class="card-text">Gunakan kamera perangkat untuk mendeteksi tomat secara langsung dengan bounding box dan label kematangan.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card bg-dark text-white h-100">
+          <div class="card-body">
+            <h5 class="card-title">🖼️ Upload Gambar</h5>
+            <p class="card-text">Unggah gambar dari galeri untuk diklasifikasikan secara otomatis oleh sistem.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card bg-dark text-white h-100">
+          <div class="card-body">
+            <h5 class="card-title">📥 Ekspor CSV</h5>
+            <p class="card-text">Unduh hasil deteksi lengkap dengan label dan deskripsi dalam format .csv.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card bg-dark text-white h-100">
+          <div class="card-body">
+            <h5 class="card-title">📊 Statistik Deteksi</h5>
+            <p class="card-text">Tampilkan grafik jumlah deteksi per kategori secara otomatis.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-4 p-4 rounded shadow" style="background-color: #2f324a;">
+    <h4 class="text-warning">👨‍💻 Tentang Pengembang</h4>
+    <p>
+      Aplikasi ini dikembangkan oleh <strong>Ibrahim Ofick</strong> sebagai bagian dari proyek pembelajaran dan implementasi sistem Computer Vision. Fokus utama adalah pemanfaatan teknologi AI untuk pertanian presisi dan efisiensi proses panen.
+    </p>
+    <p>
+      Proyek ini juga dirancang agar dapat diintegrasikan lebih lanjut ke sistem pertanian berbasis IoT, seperti kamera otomatis, drone pengawas lahan, atau detektor kualitas panen berbasis sensor visual.
+    </p>
+    <div class="text-light small">
+      <p>Email: <a href="mailto:ibrahim@example.com" class="text-info">ibrahim@example.com</a></p>
+      <p>GitHub: <a href="https://github.com/ibrahimofick" target="_blank" class="text-info">github.com/ibrahimofick</a></p>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

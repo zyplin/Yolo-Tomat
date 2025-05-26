@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Beranda{% endblock %}
+{% block content %}
+
+<div class="text-center d-flex flex-column align-items-center justify-content-center py-5" style="min-height: 90vh;">
+  <img src="https://cdn-icons-png.flaticon.com/512/590/590685.png" width="120" class="mb-4" style="filter: drop-shadow(0 0 8px #ff4d4d);" alt="Tomat Logo">
+  <h1 class="display-4 fw-bold text-light mb-3">🍅 Deteksi Kematangan Tomat</h1>
+  <p class="lead text-secondary mb-4 px-3" style="max-width: 700px;">
+    Aplikasi ini membantu kamu mengidentifikasi apakah tomat kamu <strong>mentah</strong>, <strong>setengah matang</strong>, atau <strong>matang</strong> secara otomatis menggunakan teknologi <strong>YOLOv8</strong>.
+  </p>
+  <a href="{{ url_for('deteksi') }}" class="btn btn-warning btn-lg px-5 py-2 shadow-sm">
+    <i class="bi bi-search"></i> Mulai Deteksi Sekarang
+  </a>
+</div>
+
+{% endblock %}
