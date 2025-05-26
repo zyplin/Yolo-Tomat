@@ -1,11 +1,9 @@
 [phases.setup]
 nixPkgs = ["python310", "git"]
+nixPkgs = ['libGL', 'libGLU']
 
 [phases.build]
 cmds = ["pip install -r requirements.txt"]
 
 [start]
 cmd = "gunicorn app:app"
-
-[phases.setup]
-nixPkgs = ['libGL', 'libGLU']
