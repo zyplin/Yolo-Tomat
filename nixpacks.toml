@@ -1,5 +1,4 @@
 [phases.setup]
-nixPkgs = ["python310", "git"]
 nixPkgs = ['libGL', 'libGLU']
 
 [phases.build]
