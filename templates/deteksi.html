@@ -1,64 +1,505 @@
 {% extends "base.html" %}
 {% block title %}Deteksi Kematangan{% endblock %}
+
 {% block content %}
+<style>
+  /* Detection Page Specific Styles */
+  .detection-container {
+    background: linear-gradient(135deg, rgba(15, 15, 35, 0.9) 0%, rgba(30, 30, 60, 0.9) 100%);
+    border-radius: 25px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3rem 2rem;
+    margin: 2rem auto;
+    max-width: 1000px;
+    position: relative;
+    overflow: hidden;
+  }
 
-<div class="text-center py-5">
-  <img src="https://cdn-icons-png.flaticon.com/512/590/590685.png" width="80" class="mb-3" alt="Tomat">
-  <h2 class="fw-bold text-white mb-3">🍅 Deteksi Kematangan Tomat</h2>
-  <p class="text-secondary mb-4">Gunakan kamera atau unggah gambar tomat untuk memulai proses klasifikasi.</p>
+  .detection-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 50%);
+    animation: rotate 20s linear infinite;
+    z-index: -1;
+  }
 
-  <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
-    <a href="{{ url_for('start_camera') }}" class="btn btn-success px-4">
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .hero-icon-detect {
+    width: 100px;
+    height: 100px;
+    filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.6));
+    animation: bounce 2s infinite;
+    margin-bottom: 1.5rem;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-15px); }
+    60% { transform: translateY(-8px); }
+  }
+
+  .page-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff6b6b, #ffd43b, #51cf66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .page-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  /* Control Buttons */
+  .control-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .control-btn {
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 180px;
+    justify-content: center;
+  }
+
+  .control-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .control-btn:hover::before {
+    left: 100%;
+  }
+
+  .btn-camera {
+    background: linear-gradient(135deg, #51cf66, #40c057);
+    color: white;
+    box-shadow: 0 8px 25px rgba(81, 207, 102, 0.3);
+  }
+
+  .btn-camera:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(81, 207, 102, 0.4);
+    color: white;
+  }
+
+  .btn-stop {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-stop:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .btn-info {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+  }
+
+  .btn-info:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(79, 172, 254, 0.4);
+    color: white;
+  }
+
+  /* Camera Feed */
+  .camera-feed {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(255, 107, 107, 0.3);
+  }
+
+  .camera-feed img {
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Upload Card */
+  .upload-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 2.5rem;
+    margin: 2rem auto;
+    max-width: 600px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .upload-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 107, 107, 0.3);
+  }
+
+  .upload-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .file-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .file-input:hover,
+  .file-input:focus {
+    border-color: rgba(255, 107, 107, 0.6);
+    background: rgba(255, 107, 107, 0.1);
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+  }
+
+  .upload-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ff5252);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .upload-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .upload-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+  }
+
+  .upload-btn:hover::before {
+    left: 100%;
+  }
+
+  /* Results Card */
+  .results-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 25px;
+    padding: 2.5rem;
+    margin: 3rem auto;
+    max-width: 700px;
+    position: relative;
+    transition: all 0.5s ease;
+  }
+
+  .results-card.fade-out {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .results-card.fade-out.hide {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+  }
+
+  .close-btn:hover {
+    background: rgba(255, 107, 107, 0.8);
+    transform: scale(1.1);
+  }
+
+  .results-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .result-image {
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .detection-alert {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    color: white;
+    backdrop-filter: blur(10px);
+  }
+
+  .detection-alert strong {
+    color: #ffd43b;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    justify-content: center;
+    min-width: 150px;
+  }
+
+  .btn-download {
+    background: linear-gradient(135deg, #ffd43b, #ffc107);
+    color: #333;
+    border: none;
+  }
+
+  .btn-download:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 212, 59, 0.4);
+    color: #333;
+  }
+
+  .btn-learn {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+    border: none;
+  }
+
+  .btn-learn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+    color: white;
+  }
+
+  .no-detection {
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .detection-container {
+      padding: 2rem 1rem;
+      margin: 1rem;
+    }
+    
+    .page-title {
+      font-size: 2rem;
+    }
+    
+    .control-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .control-btn {
+      min-width: 200px;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
+    
+    .action-btn {
+      width: 100%;
+    }
+  }
+
+  /* Loading Animation */
+  .processing {
+    position: relative;
+  }
+
+  .processing::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top-color: #ff6b6b;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>
+
+<div class="detection-container text-center">
+  <img src="https://cdn-icons-png.flaticon.com/512/1135/1135457.png" class="hero-icon-detect" alt="Tomat">
+  <h2 class="page-title">Deteksi Kematangan Tomat</h2>
+  <p class="page-subtitle">Gunakan kamera atau unggah gambar tomat untuk memulai proses klasifikasi dengan teknologi AI terdepan.</p>
+  
+  <div class="control-buttons">
+    <a href="{{ url_for('start_camera') }}" class="control-btn btn-camera">
       <i class="bi bi-camera-video-fill"></i> Mulai Kamera
     </a>
-    <a href="{{ url_for('stop_camera') }}" class="btn btn-outline-light px-4">
+    <a href="{{ url_for('stop_camera') }}" class="control-btn btn-stop">
       <i class="bi bi-stop-circle-fill"></i> Hentikan Kamera
     </a>
+    <a href="{{ url_for('info_tomat') }}" class="control-btn btn-info">
+      <i class="bi bi-info-circle"></i> Info Tomat
+    </a>
   </div>
-
+  
   {% if camera_active %}
-    <div class="mb-4">
-      <img src="{{ url_for('video') }}" class="img-fluid rounded shadow">
+    <div class="camera-feed">
+      <img src="{{ url_for('video') }}" class="img-fluid">
     </div>
   {% endif %}
-
+  
   <!-- Upload Form -->
-  <div class="card p-4 bg-dark text-white mx-auto" style="max-width: 600px;">
-    <h4 class="mb-3"><i class="bi bi-upload"></i> Upload Gambar Tomat</h4>
+  <div class="upload-card">
+    <h4 class="upload-title">
+      <i class="bi bi-cloud-upload"></i> Upload Gambar Tomat
+    </h4>
     <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
-      <input type="file" name="image" class="form-control mb-3" accept="image/*" required>
-      <button type="submit" class="btn btn-danger w-100">
+      <input type="file" name="image" class="form-control file-input" accept="image/*" required>
+      <button type="submit" class="upload-btn">
         <i class="bi bi-arrow-up-circle-fill"></i> Deteksi Gambar
       </button>
     </form>
   </div>
-
+  
   <!-- Hasil Deteksi -->
   {% if latest_result %}
-    <div id="hasilDeteksi" class="card p-4 my-5 bg-dark text-white mx-auto position-relative fade-out" style="max-width: 700px;">
-      <button onclick="tutupHasil()" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Tutup"></button>
-
-      <h4 class="mb-3">🖼️ Hasil Deteksi:</h4>
-      <img src="{{ url_for('uploaded_file', filename=latest_result) }}" class="img-fluid rounded mb-3">
-
+    <div id="hasilDeteksi" class="results-card fade-out">
+      <button onclick="tutupHasil()" class="close-btn" aria-label="Tutup">
+        <i class="bi bi-x"></i>
+      </button>
+      <h4 class="results-title">
+        <i class="bi bi-image"></i> Hasil Deteksi
+      </h4>
+      <img src="{{ url_for('uploaded_file', filename=latest_result) }}" class="result-image img-fluid">
       {% if zipped_data %}
         <div class="text-start">
           {% for label, desc in zipped_data %}
-            <div class="alert alert-secondary text-dark">
+            <div class="detection-alert">
               <strong>{{ label }}</strong>: {{ desc }}
             </div>
           {% endfor %}
         </div>
-        <a href="{{ url_for('download_csv') }}" class="btn btn-warning mt-2">
-          <i class="bi bi-download"></i> Unduh CSV
-        </a>
+        <div class="action-buttons">
+          <a href="{{ url_for('download_csv') }}" class="action-btn btn-download">
+            <i class="bi bi-download"></i> Unduh CSV
+          </a>
+          <a href="{{ url_for('info_tomat') }}" class="action-btn btn-learn">
+            <i class="bi bi-info-circle"></i> Pelajari Lebih Lanjut
+          </a>
+        </div>
       {% else %}
-        <p class="text-muted">Tidak ada label terdeteksi.</p>
+        <div class="no-detection">
+          <i class="bi bi-exclamation-triangle mb-2" style="font-size: 2rem;"></i>
+          <p>Tidak ada label terdeteksi. Pastikan gambar menampilkan tomat dengan jelas.</p>
+        </div>
       {% endif %}
     </div>
   {% endif %}
 </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -70,5 +511,44 @@
       setTimeout(() => hasil.style.display = 'none', 500);
     }
   }
+
+  // Add loading state to upload button
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const btn = this.querySelector('.upload-btn');
+    btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Memproses...';
+    btn.classList.add('processing');
+    btn.disabled = true;
+  });
+
+  // File input enhancement
+  const fileInput = document.querySelector('input[type="file"]');
+  fileInput.addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name;
+    if (fileName) {
+      const label = document.createElement('small');
+      label.className = 'text-success mt-2 d-block';
+      label.innerHTML = `<i class="bi bi-check-circle"></i> File dipilih: ${fileName}`;
+      
+      // Remove existing label
+      const existing = this.parentNode.querySelector('small');
+      if (existing) existing.remove();
+      
+      this.parentNode.appendChild(label);
+    }
+  });
+
+  // Smooth reveal animation for results
+  document.addEventListener('DOMContentLoaded', function() {
+    const results = document.getElementById('hasilDeteksi');
+    if (results) {
+      results.style.opacity = '0';
+      results.style.transform = 'translateY(30px)';
+      setTimeout(() => {
+        results.style.transition = 'all 0.6s ease';
+        results.style.opacity = '1';
+        results.style.transform = 'translateY(0)';
+      }, 100);
+    }
+  });
 </script>
 {% endblock %}
