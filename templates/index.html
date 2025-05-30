@@ -1,16 +1,346 @@
 {% extends "base.html" %}
-{% block title %}Beranda{% endblock %}
+{% block title %}Beranda - TomatoAI{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Hero Section */
+  .hero-section {
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    padding: 2rem 0;
+  }
+
+  .hero-content {
+    max-width: 800px;
+    z-index: 2;
+  }
+
+  .hero-icon {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 2rem;
+    filter: drop-shadow(0 0 30px rgba(255, 107, 107, 0.8));
+    animation: heroFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes heroFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+  }
+
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #ff6b6b, #ffd43b, #51cf66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleGlow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes titleGlow {
+    from { filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.3)); }
+    to { filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.6)); }
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+  }
+
+  .hero-subtitle strong {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* CTA Button */
+  .cta-button {
+    background: var(--secondary-gradient);
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(245, 87, 108, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .cta-button:hover::before {
+    left: 100%;
+  }
+
+  /* Feature Cards */
+  .feature-cards {
+    margin-top: 6rem;
+  }
+
+  .feature-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 107, 107, 0.3);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .feature-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+
+  .feature-desc {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Status Indicators */
+  .status-indicators {
+    margin-top: 4rem;
+  }
+
+  .status-item {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .status-item:hover {
+    transform: scale(1.05);
+  }
+
+  .status-raw {
+    border-left: 4px solid var(--accent-color);
+  }
+
+  .status-half {
+    border-left: 4px solid var(--warning-color);
+  }
+
+  .status-ripe {
+    border-left: 4px solid var(--success-color);
+  }
+
+  .status-emoji {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .status-label {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  /* Loading Animation */
+  .loading-dots {
+    display: inline-block;
+  }
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.5s infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    90%, 100% { content: '...'; }
+  }
+
+  @media (max-width: 768px) {
+    .hero-icon {
+      width: 100px;
+      height: 100px;
+    }
+    
+    .hero-title {
+      font-size: 2.5rem;
+    }
+    
+    .cta-button {
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+    }
+    
+    .feature-cards {
+      margin-top: 3rem;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
+<!-- HERO SECTION -->
+<section id="home" class="hero-section">
+  <div class="container hero-content">
+    <h1 class="hero-title">
+      Deteksi Kematangan Tomat
+      <span class="loading-dots"></span>
+    </h1>
+    <p class="hero-subtitle">
+      Teknologi <strong>YOLOv8</strong> terdepan untuk mengidentifikasi tingkat kematangan tomat Anda.
+      <br>Dari <strong>mentah</strong>, <strong>setengah matang</strong>, hingga <strong>matang sempurna</strong>.
+    </p>
+    <a href="{{ url_for('deteksi') }}" class="cta-button">
+      <i class="bi bi-search"></i>
+      Mulai Deteksi Sekarang
+    </a>
+  </div>
+</section>
 
-<div class="text-center d-flex flex-column align-items-center justify-content-center py-5" style="min-height: 90vh;">
-  <img src="https://cdn-icons-png.flaticon.com/512/590/590685.png" width="120" class="mb-4" style="filter: drop-shadow(0 0 8px #ff4d4d);" alt="Tomat Logo">
-  <h1 class="display-4 fw-bold text-light mb-3">🍅 Deteksi Kematangan Tomat</h1>
-  <p class="lead text-secondary mb-4 px-3" style="max-width: 700px;">
-    Aplikasi ini membantu kamu mengidentifikasi apakah tomat kamu <strong>mentah</strong>, <strong>setengah matang</strong>, atau <strong>matang</strong> secara otomatis menggunakan teknologi <strong>YOLOv8</strong>.
-  </p>
-  <a href="{{ url_for('deteksi') }}" class="btn btn-warning btn-lg px-5 py-2 shadow-sm">
-    <i class="bi bi-search"></i> Mulai Deteksi Sekarang
-  </a>
-</div>
+<!-- FEATURES SECTION -->
+<section class="container feature-cards">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="bi bi-cpu"></i>
+        </div>
+        <h3 class="feature-title">AI-Powered</h3>
+        <p class="feature-desc">
+          Menggunakan teknologi YOLOv8 yang canggih untuk deteksi akurat dan real-time.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="bi bi-lightning-charge"></i>
+        </div>
+        <h3 class="feature-title">Super Cepat</h3>
+        <p class="feature-desc">
+          Hasil deteksi instan dalam hitungan detik dengan akurasi tinggi.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="bi bi-shield-check"></i>
+        </div>
+        <h3 class="feature-title">Akurat</h3>
+        <p class="feature-desc">
+          Tingkat akurasi tinggi dalam mengklasifikasi berbagai tingkat kematangan tomat.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- STATUS INDICATORS -->
+<section class="container status-indicators">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold mb-3">Tingkat Kematangan</h2>
+    <p class="text-secondary">Aplikasi dapat mendeteksi 3 kategori kematangan tomat</p>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="status-item status-raw">
+        <span class="status-emoji">🟢</span>
+        <div class="status-label" style="color: var(--accent-color);">Mentah</div>
+        <small class="text-secondary">Tomat masih hijau dan keras</small>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="status-item status-half">
+        <span class="status-emoji">🟡</span>
+        <div class="status-label" style="color: var(--warning-color);">Setengah Matang</div>
+        <small class="text-secondary">Mulai berubah warna kemerahan</small>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="status-item status-ripe">
+        <span class="status-emoji">🔴</span>
+        <div class="status-label" style="color: var(--success-color);">Matang</div>
+        <small class="text-secondary">Merah sempurna dan siap konsumsi</small>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Add entrance animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+
+  // Observe feature cards for animation
+  document.querySelectorAll('.feature-card, .status-item').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'all 0.6s ease';
+    observer.observe(card);
+  });
+</script>
 {% endblock %}
