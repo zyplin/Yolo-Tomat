@@ -1,93 +1,867 @@
 {% extends "base.html" %}
 {% block title %}Tentang Aplikasi{% endblock %}
+
+{% block extra_css %}
+<style>
+  .hero-about {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 25px;
+    padding: 4rem 2rem;
+    text-align: center;
+    margin-bottom: 4rem;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-about::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    z-index: -1;
+  }
+
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .hero-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    background: linear-gradient(135deg, #667eea, #764ba2, #4facfe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse-icon 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.3));
+  }
+
+  @keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .hero-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-gradient {
+    padding: 1.2rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    font-size: 1rem;
+  }
+
+  .btn-primary-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn-secondary-gradient {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-4px) scale(1.05);
+    color: white;
+  }
+
+  .btn-primary-gradient:hover {
+    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.5);
+  }
+
+  .btn-secondary-gradient:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 50px rgba(255, 255, 255, 0.1);
+  }
+
+  .content-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .content-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #4facfe, #51cf66);
+    transform: scaleX(0);
+    transition: transform 0.5s ease;
+  }
+
+  .content-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .content-section:hover::before {
+    transform: scaleX(1);
+  }
+
+  .section-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .section-icon:hover {
+    transform: rotate(10deg) scale(1.1);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-content {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 1.05rem;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .tech-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .tech-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .tech-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .tech-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .tech-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .workflow-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .workflow-step {
+    text-align: center;
+    position: relative;
+  }
+
+  .workflow-step::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -1rem;
+    width: 2rem;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transform: translateY(-50%);
+    opacity: 0.5;
+  }
+
+  .workflow-step:last-child::after {
+    display: none;
+  }
+
+  .step-number {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 0 auto 1rem;
+    color: white;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .step-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .step-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .feature-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #4facfe);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .feature-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .feature-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    filter: drop-shadow(0 0 10px currentColor);
+  }
+
+  .feature-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .feature-desc {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .developer-section {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+    border-radius: 20px;
+    padding: 3rem;
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .developer-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(79, 172, 254, 0.05) 0%, transparent 70%);
+    animation: rotate-slow 25s linear infinite;
+  }
+
+  @keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .developer-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    margin: 0 auto 2rem;
+    box-shadow: 0 15px 40px rgba(79, 172, 254, 0.3);
+    animation: float-avatar 4s ease-in-out infinite;
+  }
+
+  @keyframes float-avatar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    padding: 0.8rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    text-decoration: none;
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .contact-link:hover {
+    background: rgba(79, 172, 254, 0.2);
+    transform: translateY(-3px);
+    color: var(--text-primary);
+    box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+  }
+
+  /* Floating Action Buttons - Updated to match Info Tomat page */
+  .floating-elements {
+    position: fixed;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .floating-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+  }
+
+  .floating-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+  }
+
+  .scroll-indicator {
+    position: fixed;
+    top: 50%;
+    right: 6rem;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100;
+  }
+
+  .scroll-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .scroll-dot.active {
+    background: #667eea;
+    transform: scale(1.3);
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    
+    .hero-about {
+      padding: 2.5rem 1.5rem;
+    }
+    
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .workflow-steps {
+      grid-template-columns: 1fr;
+    }
+    
+    .workflow-step::after {
+      display: none;
+    }
+    
+    .scroll-indicator,
+    .floating-elements {
+      display: none;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-
-<div class="container py-4">
-  <h2 class="text-center mb-4">📱 Tentang Aplikasi Deteksi Kematangan Tomat</h2>
-
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2f324a;">
-    <h4 class="text-warning">🎯 Tujuan Pengembangan</h4>
-    <p>
-      Aplikasi ini dikembangkan untuk membantu petani, pedagang, dan konsumen dalam mengidentifikasi tingkat kematangan tomat secara cepat, objektif, dan otomatis. Dengan bantuan kecerdasan buatan, pengguna dapat mengambil keputusan yang lebih tepat terkait waktu panen, distribusi, hingga konsumsi.
-    </p>
-    <p>
-      Deteksi dilakukan berdasarkan citra visual tomat menggunakan kamera atau gambar yang diunggah. Setiap hasil klasifikasi disertai dengan penjelasan deskriptif dan dapat diunduh dalam bentuk CSV.
-    </p>
-  </div>
-
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2c2f45;">
-    <h4 class="text-warning">🧠 Teknologi yang Digunakan</h4>
-    <ul>
-      <li>🔍 <strong>YOLOv8</strong> – Model deteksi objek real-time berbasis deep learning</li>
-      <li>⚙️ <strong>OpenCV</strong> – Untuk manipulasi gambar dan video</li>
-      <li>🌐 <strong>Flask</strong> – Framework Python ringan untuk backend web</li>
-      <li>💻 <strong>Bootstrap 5</strong> – Framework frontend untuk UI responsif</li>
-      <li>📄 <strong>CSV Export</strong> – Menyimpan hasil klasifikasi untuk dokumentasi</li>
-    </ul>
-  </div>
-
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2f324a;">
-    <h4 class="text-warning">🧪 Cara Kerja Aplikasi</h4>
-    <ol>
-      <li>👁️ Pengguna membuka kamera atau mengunggah gambar tomat</li>
-      <li>🧠 Model YOLOv8 mendeteksi tomat dan menandai tingkat kematangan</li>
-      <li>📊 Sistem menampilkan hasil klasifikasi lengkap beserta deskripsinya</li>
-      <li>💾 Pengguna dapat mengunduh hasil deteksi dalam format .csv</li>
-    </ol>
-  </div>
-
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2c2f45;">
-    <h4 class="text-warning">⚙️ Fitur Unggulan</h4>
-    <div class="row g-3">
-      <div class="col-md-6">
-        <div class="card bg-dark text-white h-100">
-          <div class="card-body">
-            <h5 class="card-title">📸 Kamera Real-Time</h5>
-            <p class="card-text">Gunakan kamera perangkat untuk mendeteksi tomat secara langsung dengan bounding box dan label kematangan.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card bg-dark text-white h-100">
-          <div class="card-body">
-            <h5 class="card-title">🖼️ Upload Gambar</h5>
-            <p class="card-text">Unggah gambar dari galeri untuk diklasifikasikan secara otomatis oleh sistem.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card bg-dark text-white h-100">
-          <div class="card-body">
-            <h5 class="card-title">📥 Ekspor CSV</h5>
-            <p class="card-text">Unduh hasil deteksi lengkap dengan label dan deskripsi dalam format .csv.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card bg-dark text-white h-100">
-          <div class="card-body">
-            <h5 class="card-title">📊 Statistik Deteksi</h5>
-            <p class="card-text">Tampilkan grafik jumlah deteksi per kategori secara otomatis.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2f324a;">
-    <h4 class="text-warning">👨‍💻 Tentang Pengembang</h4>
-    <p>
-      Aplikasi ini dikembangkan oleh <strong>Ibrahim Ofick</strong> sebagai bagian dari proyek pembelajaran dan implementasi sistem Computer Vision. Fokus utama adalah pemanfaatan teknologi AI untuk pertanian presisi dan efisiensi proses panen.
-    </p>
-    <p>
-      Proyek ini juga dirancang agar dapat diintegrasikan lebih lanjut ke sistem pertanian berbasis IoT, seperti kamera otomatis, drone pengawas lahan, atau detektor kualitas panen berbasis sensor visual.
-    </p>
-    <div class="text-light small">
-      <p>Email: <a href="mailto:ibrahim@example.com" class="text-info">ibrahim@example.com</a></p>
-      <p>GitHub: <a href="https://github.com/ibrahimofick" target="_blank" class="text-info">github.com/ibrahimofick</a></p>
-    </div>
-  </div>
-
+<!-- Floating Action Buttons -->
+<div class="floating-elements">
+  <a href="#hero" class="floating-btn" title="Ke Atas">
+    <i class="bi bi-arrow-up"></i>
+  </a>
+  <a href="{{ url_for('deteksi') }}" class="floating-btn" title="Mulai Deteksi">
+    <i class="bi bi-camera"></i>
+  </a>
 </div>
 
+<!-- Scroll Indicator -->
+<div class="scroll-indicator">
+  <div class="scroll-dot active" data-section="hero"></div>
+  <div class="scroll-dot" data-section="purpose"></div>
+  <div class="scroll-dot" data-section="tech"></div>
+  <div class="scroll-dot" data-section="workflow"></div>
+  <div class="scroll-dot" data-section="features"></div>
+  <div class="scroll-dot" data-section="developer"></div>
+</div>
+
+<div class="container py-5">
+  <!-- Hero Section -->
+  <div class="hero-about" id="hero">
+    <div class="hero-icon">🚀</div>
+    <h1 class="hero-title">TomatoAI Detection</h1>
+    <p class="hero-subtitle">
+      Aplikasi revolusioner berbasis kecerdasan buatan untuk deteksi kematangan tomat secara otomatis. 
+      Membantu petani, pedagang, dan konsumen dalam mengidentifikasi kualitas tomat dengan presisi tinggi.
+    </p>
+    <div class="cta-buttons">
+      <a href="{{ url_for('deteksi') }}" class="btn-gradient btn-primary-gradient">
+        <i class="bi bi-camera me-2"></i>Mulai Deteksi Sekarang
+      </a>
+      <a href="{{ url_for('info_tomat') }}" class="btn-gradient btn-secondary-gradient">
+        <i class="bi bi-info-circle me-2"></i>Pelajari Tentang Tomat
+      </a>
+    </div>
+  </div>
+
+  <!-- Tujuan Pengembangan -->
+  <div class="content-section" id="purpose">
+    <div class="section-title">
+      <div class="section-icon">🎯</div>
+      <span>Tujuan & Visi Pengembangan</span>
+    </div>
+    <div class="section-content">
+      <p>
+        Aplikasi TomatoAI dikembangkan untuk membantu petani, pedagang, dan konsumen dalam mengidentifikasi 
+        tingkat kematangan tomat secara cepat, objektif, dan otomatis. Dengan bantuan kecerdasan buatan, 
+        pengguna dapat mengambil keputusan yang lebih tepat terkait waktu panen, distribusi, hingga konsumsi.
+      </p>
+      <p class="mt-3">
+        Deteksi dilakukan berdasarkan citra visual tomat menggunakan kamera atau gambar yang diunggah. 
+        Setiap hasil klasifikasi disertai dengan penjelasan deskriptif dan dapat diunduh dalam bentuk CSV 
+        untuk dokumentasi dan analisis lebih lanjut.
+      </p>
+    </div>
+  </div>
+
+  <!-- Teknologi -->
+  <div class="content-section" id="tech">
+    <div class="section-title">
+      <div class="section-icon">🧠</div>
+      <span>Teknologi Terdepan</span>
+    </div>
+    <div class="section-content">
+      <p>Aplikasi ini dibangun menggunakan teknologi machine learning dan web development terkini:</p>
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-icon">🔍</div>
+          <div class="tech-name">YOLOv8</div>
+          <div class="tech-desc">Model deteksi objek real-time berbasis deep learning dengan akurasi tinggi</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon">⚙️</div>
+          <div class="tech-name">OpenCV</div>
+          <div class="tech-desc">Library computer vision untuk manipulasi gambar dan video processing</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon">🌐</div>
+          <div class="tech-name">Flask</div>
+          <div class="tech-desc">Framework Python ringan untuk pengembangan backend web application</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon">💻</div>
+          <div class="tech-name">Bootstrap 5</div>
+          <div class="tech-desc">Framework frontend modern untuk UI responsif dan user experience optimal</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon">📄</div>
+          <div class="tech-name">CSV Export</div>
+          <div class="tech-desc">Sistem ekspor data untuk dokumentasi dan analisis hasil deteksi</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-icon">🎨</div>
+          <div class="tech-name">Modern UI/UX</div>
+          <div class="tech-desc">Antarmuka modern dengan glassmorphism dan animasi interaktif</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cara Kerja -->
+  <div class="content-section" id="workflow">
+    <div class="section-title">
+      <div class="section-icon">🔄</div>
+      <span>Alur Kerja Sistem</span>
+    </div>
+    <div class="section-content">
+      <p>Proses deteksi kematangan tomat dilakukan melalui 4 tahap utama:</p>
+      <div class="workflow-steps">
+        <div class="workflow-step">
+          <div class="step-number">1</div>
+          <div class="step-title">Input Gambar</div>
+          <div class="step-desc">Pengguna membuka kamera real-time atau mengunggah gambar tomat dari galeri</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">2</div>
+          <div class="step-title">AI Processing</div>
+          <div class="step-desc">Model YOLOv8 mendeteksi tomat dan menganalisis tingkat kematangan secara otomatis</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">3</div>
+          <div class="step-title">Hasil Klasifikasi</div>
+          <div class="step-desc">Sistem menampilkan hasil dengan bounding box, label, dan deskripsi lengkap</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">4</div>
+          <div class="step-title">Export Data</div>
+          <div class="step-desc">Pengguna dapat mengunduh hasil deteksi dalam format CSV untuk dokumentasi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fitur Unggulan -->
+  <div class="content-section" id="features">
+    <div class="section-title">
+      <div class="section-icon">⭐</div>
+      <span>Fitur Unggulan</span>
+    </div>
+    <div class="section-content">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📸</div>
+          <div class="feature-title">Kamera Real-Time</div>
+          <div class="feature-desc">
+            Gunakan kamera perangkat untuk mendeteksi tomat secara langsung dengan bounding box 
+            dan label kematangan yang akurat dan responsif.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🖼️</div>
+          <div class="feature-title">Upload Gambar</div>
+          <div class="feature-desc">
+            Unggah gambar dari galeri untuk diklasifikasikan secara otomatis dengan hasil 
+            yang presisi dan dapat diandalkan.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📥</div>
+          <div class="feature-title">Ekspor CSV</div>
+          <div class="feature-desc">
+            Unduh hasil deteksi lengkap dengan label, confidence score, dan deskripsi 
+            dalam format CSV untuk analisis lanjutan.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Statistik Deteksi</div>
+          <div class="feature-desc">
+            Tampilkan grafik dan statistik jumlah deteksi per kategori kematangan 
+            secara otomatis dan visual yang menarik.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">Akurasi Tinggi</div>
+          <div class="feature-desc">
+            Model YOLOv8 yang telah dilatih khusus memberikan tingkat akurasi deteksi 
+            yang tinggi untuk berbagai kondisi pencahayaan.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <div class="feature-title">Responsif</div>
+          <div class="feature-desc">
+            Interface yang responsif dan dapat diakses dari berbagai perangkat, 
+            mulai dari desktop hingga smartphone.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tentang Pengembang -->
+  <div class="developer-section" id="developer">
+    <div class="text-center">
+      <div class="developer-avatar">👨‍💻</div>
+      <div class="section-title justify-content-center">
+        <span>Tentang Pengembang</span>
+      </div>
+      <div class="section-content">
+        <p class="text-center">
+          Aplikasi TomatoAI dikembangkan oleh <strong>Ibrahim Ofick</strong> sebagai bagian dari proyek 
+          pembelajaran dan implementasi sistem Computer Vision. Fokus utama adalah pemanfaatan teknologi 
+          AI untuk pertanian presisi dan efisiensi proses panen.
+        </p>
+        <p class="text-center mt-3">
+          Proyek ini dirancang agar dapat diintegrasikan lebih lanjut ke sistem pertanian berbasis IoT, 
+          seperti kamera otomatis, drone pengawas lahan, atau detektor kualitas panen berbasis sensor visual. 
+          Visi kedepannya adalah menciptakan ekosistem pertanian cerdas yang berkelanjutan.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:ibrahim@example.com" class="contact-link">
+            <i class="bi bi-envelope me-2"></i>Email
+          </a>
+          <a href="https://github.com/ibrahimofick" target="_blank" class="contact-link">
+            <i class="bi bi-github me-2"></i>GitHub
+          </a>
+          <a href="https://linkedin.com/in/ibrahimofick" target="_blank" class="contact-link">
+            <i class="bi bi-linkedin me-2"></i>LinkedIn
+          </a>
+          <a href="https://portfolio-ibrahim.com" target="_blank" class="contact-link">
+            <i class="bi bi-globe me-2"></i>Portfolio
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Smooth scroll for floating button
+  document.querySelector('a[href="#hero"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('hero').scrollIntoView({
+      behavior: 'smooth'
+    });
+  });
+
+  // Scroll indicator functionality
+  const sections = document.querySelectorAll('[id]');
+  const scrollDots = document.querySelectorAll('.scroll-dot');
+  
+  function updateScrollIndicator() {
+    let current = '';
+    
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+      
+      if (pageYOffset >= sectionTop - 200) {
+        current = section.getAttribute('id');
+      }
+    });
+    
+    scrollDots.forEach(dot => {
+      dot.classList.remove('active');
+      if (dot.getAttribute('data-section') === current) {
+        dot.classList.add('active');
+      }
+    });
+  }
+  
+  // Smooth scroll for scroll dots
+  scrollDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetSection = document.getElementById(dot.getAttribute('data-section'));
+      if (targetSection) {
+        targetSection.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+  
+  window.addEventListener('scroll', updateScrollIndicator);
+  
+  // Parallax effect for hero section
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const heroSection = document.querySelector('.hero-about');
+    
+    if (heroSection) {
+      heroSection.style.transform = `translateY(${scrolled * 0.3}px)`;
+    }
+  });
+  
+  // Intersection Observer for animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+  
+  // Observe content sections
+  document.querySelectorAll('.content-section, .developer-section').forEach(section => {
+    section.style.opacity = '0';
+    section.style.transform = 'translateY(20px)';
+    section.style.transition = 'all 0.6s ease-out';
+    observer.observe(section);
+  });
+
+  // Initialize tooltips
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+
+  // Add hover effect for tech items
+  document.querySelectorAll('.tech-item').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      item.style.transform = 'translateY(-5px)';
+      item.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.2)';
+    });
+    
+    item.addEventListener('mouseleave', () => {
+      item.style.transform = 'translateY(0)';
+      item.style.boxShadow = 'none';
+    });
+  });
+
+  // Add hover effect for feature cards
+  document.querySelectorAll('.feature-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.style.transform = 'translateY(-8px)';
+      card.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.15)';
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'translateY(0)';
+      card.style.boxShadow = 'none';
+    });
+  });
+
+  // Add click effect for contact links
+  document.querySelectorAll('.contact-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const ripple = document.createElement('div');
+      ripple.classList.add('ripple');
+      link.appendChild(ripple);
+      
+      const rect = link.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+      ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+      
+      ripple.classList.add('active');
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    });
+  });
+</script>
 {% endblock %}
