@@ -1,84 +1,581 @@
 {% extends "base.html" %}
 {% block title %}Informasi Tomat{% endblock %}
+
+{% block extra_css %}
+<style>
+  .hero-section {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 107, 107, 0.05) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    z-index: -1;
+  }
+
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff6b6b, #ffd43b, #51cf66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-modern {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-primary-modern {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn-secondary-modern {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+    color: white;
+  }
+
+  .btn-secondary-modern:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 40px rgba(255, 255, 255, 0.1);
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .info-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #ffd43b, #51cf66, #4facfe);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .info-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .info-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    text-align: center;
+    filter: drop-shadow(0 0 15px currentColor);
+  }
+
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .card-content {
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .ripeness-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .ripeness-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripeness-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+
+  .ripeness-card:hover::after {
+    width: 200px;
+    height: 200px;
+  }
+
+  .ripeness-card:hover {
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .ripeness-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+  }
+
+  .ripeness-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+
+  .benefits-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .benefits-list li {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .benefits-list li:hover {
+    padding-left: 1rem;
+    color: var(--text-primary);
+  }
+
+  .benefits-list li:last-child {
+    border-bottom: none;
+  }
+
+  .benefit-icon {
+    font-size: 1.5rem;
+    min-width: 2rem;
+  }
+
+  .tips-container {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem 0;
+    border: 1px solid rgba(79, 172, 254, 0.2);
+  }
+
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .tip-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+  }
+
+  .tip-green {
+    border-left-color: #51cf66;
+  }
+
+  .tip-yellow {
+    border-left-color: #ffd43b;
+  }
+
+  .tip-red {
+    border-left-color: #ff6b6b;
+  }
+
+  .tip-item:hover {
+    transform: translateX(10px);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .sources-section {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 3rem;
+  }
+
+  .floating-elements {
+    position: fixed;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .floating-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+  }
+
+  .floating-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .floating-elements {
+      display: none;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
+<!-- Floating Action Buttons -->
+<div class="floating-elements">
+  <a href="#top" class="floating-btn" title="Ke Atas">
+    <i class="bi bi-arrow-up"></i>
+  </a>
+  <a href="{{ url_for('deteksi') }}" class="floating-btn" title="Mulai Deteksi">
+    <i class="bi bi-camera"></i>
+  </a>
+</div>
 
-<div class="container py-4">
-  <h2 class="mb-4 text-center">🍅 Informasi Lengkap Tentang Tomat</h2>
-
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2c2f45;">
-    <h4 class="text-warning">📘 Apa Itu Tomat?</h4>
-    <p>
-      Tomat (<em>Solanum lycopersicum</em>) adalah buah yang berasal dari Amerika Tengah dan Selatan, dan kini telah menjadi bahan pangan penting secara global. Meski secara botani tergolong buah, tomat lebih umum dikonsumsi dan diperlakukan sebagai sayuran dalam dunia kuliner. 
+<div class="container py-5" id="top">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-title">🍅 Dunia Tomat</div>
+    <p class="hero-subtitle">
+      Jelajahi segala hal tentang tomat - dari karakteristik fisik hingga manfaat kesehatan yang luar biasa. 
+      Pelajari cara mengenali tingkat kematangan dan tips penyimpanan yang tepat.
     </p>
-    <p>
-      Tanaman tomat tumbuh subur di iklim tropis dan subtropis, dan dibudidayakan luas di Indonesia. Tomat memiliki siklus pertumbuhan cepat dan mudah ditanam di pekarangan rumah hingga pertanian skala besar.
-    </p>
+    <div class="action-buttons">
+      <a href="{{ url_for('deteksi') }}" class="btn-modern btn-primary-modern">
+        <i class="bi bi-camera me-2"></i>Mulai Deteksi AI
+      </a>
+      <a href="{{ url_for('tentang') }}" class="btn-modern btn-secondary-modern">
+        <i class="bi bi-info-circle me-2"></i>Tentang Aplikasi
+      </a>
+    </div>
   </div>
 
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2f324a;">
-    <h4 class="text-warning">🌿 Ciri-ciri Fisik Tomat</h4>
-    <ul>
-      <li>✅ Bentuk bulat atau lonjong, tergantung varietas</li>
-      <li>✅ Permukaan kulit halus, mengilap, dan tipis</li>
-      <li>✅ Warna kulit berubah seiring tingkat kematangan</li>
-      <li>✅ Mengandung banyak air, dengan rasa manis-asam</li>
-    </ul>
-  </div>
+  <!-- Main Info Grid -->
+  <div class="info-grid">
+    <!-- Pengenalan Tomat -->
+    <div class="info-card">
+      <div class="card-icon">🌱</div>
+      <h3 class="card-title">Apa Itu Tomat?</h3>
+      <div class="card-content">
+        <p>
+          Tomat (<em>Solanum lycopersicum</em>) adalah buah yang berasal dari Amerika Tengah dan Selatan, 
+          dan kini telah menjadi bahan pangan penting secara global. Meski secara botani tergolong buah, 
+          tomat lebih umum dikonsumsi dan diperlakukan sebagai sayuran dalam dunia kuliner.
+        </p>
+        <p class="mt-3">
+          Tanaman tomat tumbuh subur di iklim tropis dan subtropis, dan dibudidayakan luas di Indonesia. 
+          Tomat memiliki siklus pertumbuhan cepat dan mudah ditanam di pekarangan rumah hingga pertanian skala besar.
+        </p>
+      </div>
+    </div>
 
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2c2f45;">
-    <h4 class="text-warning">🔍 Tingkat Kematangan Tomat</h4>
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <div class="card bg-dark text-white h-100">
-          <div class="card-body">
-            <h5 class="card-title">🟢 Mentah</h5>
-            <p class="card-text">Warna hijau, tekstur keras, rasa asam kuat. Biasanya belum layak dikonsumsi langsung.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="card bg-dark text-white h-100">
-          <div class="card-body">
-            <h5 class="card-title">🟡 Setengah Matang</h5>
-            <p class="card-text">Warna oranye hingga kekuningan. Tekstur mulai empuk dan rasa lebih seimbang.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="card bg-dark text-white h-100">
-          <div class="card-body">
-            <h5 class="card-title">🔴 Matang</h5>
-            <p class="card-text">Warna merah terang, tekstur lunak, rasa manis-segar. Ideal untuk konsumsi langsung atau diolah.</p>
-          </div>
-        </div>
+    <!-- Ciri-ciri Fisik -->
+    <div class="info-card">
+      <div class="card-icon">🔍</div>
+      <h3 class="card-title">Ciri-ciri Fisik</h3>
+      <div class="card-content">
+        <ul class="benefits-list">
+          <li>
+            <span class="benefit-icon">📐</span>
+            <span>Bentuk bulat atau lonjong, tergantung varietas</span>
+          </li>
+          <li>
+            <span class="benefit-icon">✨</span>
+            <span>Permukaan kulit halus, mengilap, dan tipis</span>
+          </li>
+          <li>
+            <span class="benefit-icon">🎨</span>
+            <span>Warna kulit berubah seiring tingkat kematangan</span>
+          </li>
+          <li>
+            <span class="benefit-icon">💧</span>
+            <span>Mengandung banyak air, dengan rasa manis-asam</span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2f324a;">
-    <h4 class="text-warning">💡 Manfaat Kesehatan</h4>
-    <ul>
-      <li>🍅 Kaya likopen: antioksidan kuat yang mencegah kanker & penuaan dini</li>
-      <li>💖 Menjaga kesehatan jantung dan menurunkan kolesterol</li>
-      <li>👁️ Menjaga kesehatan mata berkat kandungan vitamin A</li>
-      <li>🛡️ Meningkatkan daya tahan tubuh dengan vitamin C tinggi</li>
-      <li>🥗 Mendukung diet sehat karena rendah kalori dan tinggi serat</li>
-    </ul>
+  <!-- Tingkat Kematangan -->
+  <div class="info-card">
+    <div class="card-icon">🚦</div>
+    <h3 class="card-title">Tingkat Kematangan Tomat</h3>
+    <div class="ripeness-grid">
+      <div class="ripeness-card">
+        <div class="ripeness-icon">🟢</div>
+        <h4 class="ripeness-title">Mentah</h4>
+        <p class="card-content">
+          Warna hijau, tekstur keras, rasa asam kuat. Biasanya belum layak dikonsumsi langsung, 
+          cocok untuk sayuran dan olahan tertentu.
+        </p>
+      </div>
+      <div class="ripeness-card">
+        <div class="ripeness-icon">🟡</div>
+        <h4 class="ripeness-title">Setengah Matang</h4>
+        <p class="card-content">
+          Warna oranye hingga kekuningan. Tekstur mulai empuk dan rasa lebih seimbang, 
+          ideal untuk berbagai olahan masakan.
+        </p>
+      </div>
+      <div class="ripeness-card">
+        <div class="ripeness-icon">🔴</div>
+        <h4 class="ripeness-title">Matang</h4>
+        <p class="card-content">
+          Warna merah terang, tekstur lunak, rasa manis-segar. Ideal untuk konsumsi langsung, 
+          salad, atau berbagai olahan kuliner.
+        </p>
+      </div>
+    </div>
   </div>
 
-  <div class="mb-4 p-4 rounded shadow" style="background-color: #2c2f45;">
-    <h4 class="text-warning">🧊 Tips Menyimpan Tomat</h4>
-    <ul>
-      <li>🟢 Tomat mentah: simpan di suhu ruang, hindari sinar matahari langsung</li>
-      <li>🟡 Setengah matang: tempat sejuk atau suhu kamar, bisa dimatangkan bertahap</li>
-      <li>🔴 Tomat matang: simpan di kulkas jika tidak langsung dikonsumsi untuk memperlambat pembusukan</li>
-    </ul>
-    <p class="fst-italic text-light">Hindari menyimpan tomat di kulkas saat masih mentah karena dapat merusak tekstur dan memperlambat pematangan.</p>
+  <!-- Manfaat Kesehatan -->
+  <div class="info-card">
+    <div class="card-icon">💊</div>
+    <h3 class="card-title">Manfaat Kesehatan Luar Biasa</h3>
+    <div class="card-content">
+      <ul class="benefits-list">
+        <li>
+          <span class="benefit-icon">🛡️</span>
+          <span><strong>Kaya Likopen:</strong> Antioksidan kuat yang mencegah kanker & penuaan dini</span>
+        </li>
+        <li>
+          <span class="benefit-icon">❤️</span>
+          <span><strong>Kesehatan Jantung:</strong> Menjaga kesehatan jantung dan menurunkan kolesterol</span>
+        </li>
+        <li>
+          <span class="benefit-icon">👁️</span>
+          <span><strong>Kesehatan Mata:</strong> Menjaga kesehatan mata berkat kandungan vitamin A</span>
+        </li>
+        <li>
+          <span class="benefit-icon">🌟</span>
+          <span><strong>Daya Tahan Tubuh:</strong> Meningkatkan imunitas dengan vitamin C tinggi</span>
+        </li>
+        <li>
+          <span class="benefit-icon">⚖️</span>
+          <span><strong>Diet Sehat:</strong> Mendukung program diet karena rendah kalori dan tinggi serat</span>
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <div class="text-end text-secondary small">
-    <p class="fst-italic">📚 Sumber: Litbang Pertanian, Healthline, USDA Agricultural Research Service</p>
+  <!-- Tips Penyimpanan -->
+  <div class="tips-container">
+    <div class="card-icon" style="text-align: center; margin-bottom: 1rem;">🧊</div>
+    <h3 class="card-title">Tips Penyimpanan Optimal</h3>
+    <div class="tips-grid">
+      <div class="tip-item tip-green">
+        <h5 style="color: #51cf66; margin-bottom: 1rem;">🟢 Tomat Mentah</h5>
+        <p class="card-content">
+          Simpan di suhu ruang, hindari sinar matahari langsung. Biarkan matang secara alami 
+          untuk rasa yang optimal.
+        </p>
+      </div>
+      <div class="tip-item tip-yellow">
+        <h5 style="color: #ffd43b; margin-bottom: 1rem;">🟡 Setengah Matang</h5>
+        <p class="card-content">
+          Tempatkan di area sejuk atau suhu kamar. Bisa dimatangkan bertahap sesuai kebutuhan 
+          konsumsi Anda.
+        </p>
+      </div>
+      <div class="tip-item tip-red">
+        <h5 style="color: #ff6b6b; margin-bottom: 1rem;">🔴 Tomat Matang</h5>
+        <p class="card-content">
+          Simpan di kulkas jika tidak langsung dikonsumsi untuk memperlambat pembusukan 
+          dan mempertahankan kesegaran.
+        </p>
+      </div>
+    </div>
+    <div class="mt-4 p-3" style="background: rgba(255, 255, 255, 0.05); border-radius: 10px; border-left: 4px solid #4facfe;">
+      <p class="card-content" style="margin: 0; font-style: italic;">
+        <strong>💡 Pro Tip:</strong> Hindari menyimpan tomat di kulkas saat masih mentah karena dapat merusak tekstur 
+        dan memperlambat proses pematangan alami.
+      </p>
+    </div>
+  </div>
+
+  <!-- Sources -->
+  <div class="sources-section">
+    <h6 style="color: var(--text-secondary); margin-bottom: 1rem;">📚 Sumber Referensi</h6>
+    <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">
+      Litbang Pertanian Indonesia • Healthline • USDA Agricultural Research Service • 
+      Journal of Agricultural and Food Chemistry
+    </p>
   </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+  // Smooth scroll for floating button
+  document.querySelector('a[href="#top"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+  
+  // Add parallax effect to hero section
+  window.addEventListener('scroll', function() {
+    const heroSection = document.querySelector('.hero-section');
+    const scrolled = window.pageYOffset;
+    const rate = scrolled * -0.5;
+    
+    if (heroSection) {
+      heroSection.style.transform = `translateY(${rate}px)`;
+    }
+  });
+
+  // Add entrance animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+
+  // Observe all cards
+  document.querySelectorAll('.info-card, .ripeness-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'all 0.6s ease';
+    observer.observe(card);
+  });
+</script>
 {% endblock %}
